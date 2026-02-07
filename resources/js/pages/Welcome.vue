@@ -15,16 +15,15 @@ const cards = [
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
-    <div class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] dark:bg-[#0a0a0a] lg:justify-center lg:p-8">
+    <div class="flex min-h-screen h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] dark:bg-[#0a0a0a] lg:p-8 overflow-hidden">
         <video
             src="/videos/backgroundvideo.mp4"
             autoplay
             muted
             loop
-            class="blur-xs absolute inset-0 z-0 h-full w-full object-cover opacity-35"
+            class="blur-xs fixed inset-0 z-0 h-full w-full object-cover opacity-35"
         ></video>
-        <div class="blur-xs flex h-full w-full bg-transparent"></div>
-        <header class="not-has-[nav]:hidden z-50 mb-6 w-full max-w-[335px] text-sm lg:max-w-4xl">
+        <header class="not-has-[nav]:hidden z-50 mb-6 w-full max-w-[335px] text-sm lg:max-w-4xl pt-0">
             <nav class="flex items-center justify-end gap-4">
                 <Link
                     v-if="$page.props.auth.user"
@@ -50,7 +49,7 @@ const cards = [
             </nav>
         </header>
         <div class="duration-750 starting:opacity-0 z-10 flex w-full items-start justify-center opacity-100 transition-opacity lg:grow">
-            <main class="mt-32 flex w-full max-w-[335px] flex-col flex-wrap rounded-lg lg:max-w-4xl lg:flex-row gap-10">
+            <main class="flex w-full max-w-[335px] flex-col flex-wrap rounded-lg lg:max-w-4xl lg:flex-row gap-10">
                 <h1 class="text-5xl font-bold text-[#1b1b18] dark:text-[#EDEDEC]">P 0 K E R H A N D S</h1>
                 <p class="text-lg text-[#1b1b18] dark:text-[#EDEDEC]">
                     A simple poker hand evaluator that can evaluate a poker hand amongst others and determine its rank and percentage to win.
@@ -60,25 +59,23 @@ const cards = [
                 </p>
                 <!-- <img src="/images/pokerhandsblabla.png" alt="Poker Hands"> -->
             </main>
-            <div class="hidden lg:block absolute inset-0 pointer-events-none z-5">
-                <div class="absolute top-[75%] left-1/2 -translate-x-1/2 -translate-y-1/2 transform perspective-1000 w-screen h-screen flex items-center justify-center pointer-events-none">
-                    <div 
-                        v-for="(card, index) in cards" 
-                        :key="index"
-                        :style="{ 
-                            animationDelay: `${card.delay}ms`,
-                            zIndex: index
-                        }"
-                        class="card-3d absolute bg-white p-3 rounded-lg shadow-2xl transition-all duration-500 ease-out hover:scale-110 hover:-translate-y-8 hover:z-50 cursor-pointer w-48 h-auto pointer-events-auto"
-                        :class="`card-rotation-${index}`"
-                    >
-                        <img :src="card.image" :alt="card.alt" class="w-full h-auto select-none pointer-events-none" />
-                    </div>
+        </div>
+        <!-- Card Fan Container - Full Width, below header -->
+        <div class="hidden lg:block absolute inset-0 pointer-events-none z-5">
+            <div class="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 transform perspective-1000 flex items-center justify-center pointer-events-none">
+                <div 
+                    v-for="(card, index) in cards" 
+                    :key="index"
+                    :style="{ 
+                        animationDelay: `${card.delay}ms`
+                    }"
+                    class="card-3d absolute bg-white p-3 rounded-lg shadow-2xl transition-all duration-500 ease-out hover:scale-110 hover:-translate-y-8 cursor-pointer w-48 h-auto pointer-events-auto"
+                    :class="`card-rotation-${index}`"
+                >
+                    <img :src="card.image" :alt="card.alt" class="w-full h-auto select-none pointer-events-none" />
                 </div>
             </div>
         </div>
-        <!-- Card Fan Container - Full Width -->
-        <div class="h-14.5 hidden lg:block"></div>
     </div>
 </template>
 
