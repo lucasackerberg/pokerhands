@@ -19,6 +19,32 @@ export default {
                 md: 'calc(var(--radius) - 2px)',
                 sm: 'calc(var(--radius) - 4px)',
             },
+            animation: {
+                'slide-in-right-delay-200': 'slideInRight 0.8s ease-out 0.2s both',
+                'slide-in-right-delay-400': 'slideInRight2 0.8s ease-out 0.4s both',
+            },
+            keyframes: {
+                slideInRight: {
+                    'from': {
+                        opacity: '0',
+                        transform: 'translateX(100px)',
+                    },
+                    'to': {
+                        opacity: '1',
+                        transform: 'translateX(120px)',
+                    },
+                },
+                slideInRight2: {
+                    'from': {
+                        opacity: '0',
+                        transform: 'translateX(100px)',
+                    },
+                    'to': {
+                        opacity: '1',
+                        transform: 'translateX(-120px)',
+                    },
+                },
+            },
             colors: {
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
