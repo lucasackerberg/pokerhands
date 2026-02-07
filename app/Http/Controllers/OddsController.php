@@ -22,8 +22,9 @@ class OddsController extends Controller
         $input = json_encode(['players' => $players, 'board' => $board]);
 
         $scriptPath = base_path('scripts/calculate-odds.js');
+        $nodeBinary = env('NODE_BINARY', 'node');
 
-        $result = Process::input($input)->run('"C:\Program Files\nodejs\node.exe" "' . $scriptPath . '"');
+        $result = Process::input($input)->run([$nodeBinary, $scriptPath]);
 
         Log::info('Process result: ' . $result->output());
         Log::info('Process error: ' . $result->errorOutput());

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 
@@ -24,6 +24,9 @@ const props = defineProps<{
     sessions: SessionGroup[];
     canOrganize: boolean;
 }>();
+
+const page = usePage();
+const currentUserId = computed(() => page.props.auth?.user?.id ?? 0);
 
 const showCreateModal = ref(false);
 const formData = ref({
@@ -80,7 +83,7 @@ function formatDate(dateString: string): string {
 }
 
 function isOrganizer(session: SessionGroup): boolean {
-    return session.organizer_id === (auth().user?.id || 0);
+    return session.organizer_id === currentUserId.value;
 }
 </script>
 

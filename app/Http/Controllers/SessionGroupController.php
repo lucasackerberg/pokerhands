@@ -12,11 +12,7 @@ class SessionGroupController extends Controller
 {
     public function index()
     {
-        $sessions = SessionGroup::where('organizer_id', auth()->id())
-            ->orWhereHas('entries', function ($q) {
-                $q->where('user_id', auth()->id());
-            })
-            ->with(['organizer', 'entries.user'])
+        $sessions = SessionGroup::with(['organizer', 'entries.user'])
             ->latest()
             ->get();
 

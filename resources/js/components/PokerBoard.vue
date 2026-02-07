@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, onBeforeUnmount } from 'vue';
+import { CardGroup, OddsCalculator } from 'poker-odds-calculator';
 import PlayerHand from './PlayerHand.vue';
 import Card from './Card.vue';
 
@@ -128,24 +129,13 @@ async function requestOdds() {
   isCalculating.value = true;
   const start = performance.now();
   try {
-    const response = await fetch('/api/odds', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-      },
-      body: JSON.stringify({ players: playerStrings, board: boardStr }),
-    });
-    const data = await response.json();
-    if (data.equities) {
-      equities.value = data.equities.map((e: any) => e.equity);
-    } else if (data.error) {
-      console.error('Odds API error:', data.error);
-      lastDuration.value = `API error: ${data.error}`;
-    }
+    const playerGroups = playerStrings.map((p) => CardGroup.fromString(p));
+    const boardGroup = boardStr ? CardGroup.fromString(boardStr) : undefined;
+    const result = OddsCalculator.calculate(playerGroups, boardGroup);
+    equities.value = result.equities.map((e: any) => e.getEquity());
   } catch (err: any) {
-    console.error('Fetch error:', err);
-    lastDuration.value = `Fetch error: ${err.message}`;
+    console.error('Odds calc error:', err);
+    lastDuration.value = `Calc error: ${err?.message ?? 'Unknown error'}`;
   } finally {
     isCalculating.value = false;
     const dur = performance.now() - start;
@@ -165,18 +155,9 @@ async function runBenchmark(runs = 10) {
   for (let i = 0; i < runs; i++) {
     const start = performance.now();
     try {
-      const response = await fetch('/api/odds', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-        },
-        body: JSON.stringify({ players: playerStrings, board: boardStr }),
-      });
-      const data = await response.json();
-      if (data.equities) {
-        // just to trigger the fetch
-      }
+      const playerGroups = playerStrings.map((p) => CardGroup.fromString(p));
+      const boardGroup = boardStr ? CardGroup.fromString(boardStr) : undefined;
+      OddsCalculator.calculate(playerGroups, boardGroup);
     } catch (err) {
       // ignore for benchmark
     }

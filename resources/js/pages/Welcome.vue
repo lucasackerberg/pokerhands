@@ -35,13 +35,13 @@ const cards = [
                 <template v-else>
                     <Link
                         :href="route('login')"
-                        class="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
+                        class="inline-flex items-center gap-2 rounded-full border border-transparent bg-gradient-to-r from-[#3b0a0a] via-[#6b0f0f] to-[#8b0f0f] px-5 py-2 text-sm font-semibold leading-normal text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b1b18]"
                     >
                         Log in
                     </Link>
                     <Link
                         :href="route('register')"
-                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        class="inline-flex items-center gap-2 rounded-full border border-transparent bg-gradient-to-r from-[#4a0b0b] via-[#7a1111] to-[#a31313] px-5 py-2 text-sm font-semibold leading-normal text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b1b18]"
                     >
                         Register
                     </Link>
