@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('session_group_entries', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->id();
             $table->foreignId('session_group_id')->constrained('session_groups')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
