@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 import Card from '../components/Card.vue';
 
 type User = { id: number; name: string };
@@ -23,6 +23,8 @@ const props = defineProps<{
     userEntry: Entry | null;
 }>();
 
+const page = usePage<SharedData>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Poker Nights', href: '/sessions' },
@@ -30,6 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const showEntryForm = ref(false);
+const currency = computed<'USD' | 'SEK'>(() => (page.props.auth.user?.currency === 'SEK' ? 'SEK' : 'USD'));
 const formData = ref({
     buy_in: props.userEntry?.buy_in ?? '',
     cash_out: props.userEntry?.cash_out ?? '',
@@ -81,10 +84,12 @@ async function submitEntry() {
 }
 
 function formatCurrency(value: string | number): string {
-    return new Intl.NumberFormat('en-US', {
+    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+    const locale = currency.value === 'SEK' ? 'sv-SE' : 'en-US';
+    return new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: 'USD',
-    }).format(typeof value === 'string' ? parseFloat(value) : value);
+        currency: currency.value,
+    }).format(numericValue);
 }
 
 function formatDate(dateString: string): string {
@@ -109,6 +114,11 @@ function formatDate(dateString: string): string {
                         <p class="text-sm text-neutral-400">{{ formatDate(session.session_date) }}</p>
                     </div>
                     <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 text-xs text-neutral-400">
+                            <span class="uppercase">Currency</span>
+                            <span class="rounded-md bg-black/30 px-2 py-1 font-mono text-xs text-neutral-300">{{ currency }}</span>
+                            <a href="/settings/profile" class="text-blue-400 hover:text-blue-300">Change</a>
+                        </div>
                         <code class="rounded-lg bg-black/30 px-3 py-2 font-mono text-sm text-neutral-300">{{ session.code }}</code>
                         <button
                             @click="() => navigator.clipboard.writeText(session.code)"
@@ -163,7 +173,7 @@ function formatDate(dateString: string): string {
                 <form v-if="showEntryForm" @submit.prevent="submitEntry" class="space-y-4">
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-sm font-medium">Buy-In ($)</label>
+                            <label class="mb-1 block text-sm font-medium">Buy-In ({{ currency }})</label>
                             <input
                                 v-model="formData.buy_in"
                                 type="number"
@@ -176,7 +186,7 @@ function formatDate(dateString: string): string {
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-sm font-medium">Cash-Out ($)</label>
+                            <label class="mb-1 block text-sm font-medium">Cash-Out ({{ currency }})</label>
                             <input
                                 v-model="formData.cash_out"
                                 type="number"

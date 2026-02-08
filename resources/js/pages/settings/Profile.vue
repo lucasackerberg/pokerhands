@@ -33,6 +33,7 @@ const user = page.props.auth.user as User;
 const form = useForm({
     name: user.name,
     email: user.email,
+    currency: user.currency ?? 'USD',
 });
 
 const submit = () => {
@@ -69,6 +70,19 @@ const submit = () => {
                             placeholder="Email address"
                         />
                         <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="currency">Currency</Label>
+                        <select
+                            id="currency"
+                            v-model="form.currency"
+                            class="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        >
+                            <option value="USD">USD</option>
+                            <option value="SEK">SEK</option>
+                        </select>
+                        <InputError class="mt-2" :message="form.errors.currency" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">

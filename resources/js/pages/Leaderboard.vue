@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 
 type LeaderboardEntry = {
     id: number;
@@ -31,6 +32,9 @@ const props = defineProps<{
     leaderboard: LeaderboardEntry[];
     userSessions: UserSession[];
 }>();
+
+const page = usePage<SharedData>();
+const currency = computed<'USD' | 'SEK'>(() => (page.props.auth.user?.currency === 'SEK' ? 'SEK' : 'USD'));
 
 async function submitSession() {
     if (isSubmitting.value) return;
@@ -73,10 +77,12 @@ async function submitSession() {
 
 
 function formatCurrency(value: string | number): string {
-    return new Intl.NumberFormat('en-US', {
+    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+    const locale = currency.value === 'SEK' ? 'sv-SE' : 'en-US';
+    return new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: 'USD',
-    }).format(typeof value === 'string' ? parseFloat(value) : value);
+        currency: currency.value,
+    }).format(numericValue);
 }
 
 function formatDate(dateString: string): string {
